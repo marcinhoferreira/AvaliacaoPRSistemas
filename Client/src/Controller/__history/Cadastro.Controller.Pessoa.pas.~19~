@@ -1,0 +1,45 @@
+unit Cadastro.Controller.Pessoa;
+
+interface
+
+uses
+   SysUtils, Classes, DB,
+   Cadastro.Controller.Interfaces;
+
+type
+   TPessoaController = class(TInterfacedObject, IPessoaController)
+   private
+      { Private declarations }
+      fModel: TModelCadastro;
+      constructor Create;
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      class function New: IPessoaController;
+      procedure Open(DS: TDataSource);
+   end;
+
+implementation
+
+{ TPessoaController }
+
+
+{ TPessoaController }
+
+constructor TPessoaController.Create;
+begin
+
+end;
+
+class function TPessoaController.New: IPessoaController;
+begin
+   Result := Self.Create;
+end;
+
+procedure TPessoaController.Open(DS: TDataSource);
+begin
+
+end;
+
+end.

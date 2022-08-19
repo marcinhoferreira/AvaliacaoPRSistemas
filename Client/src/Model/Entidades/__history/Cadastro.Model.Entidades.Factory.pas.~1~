@@ -1,0 +1,173 @@
+unit EasyMoneyServer.Model.Entidades.Factory;
+
+interface
+
+uses
+  LealSoftwares.Classe.Tipos,
+  EasyMoneyServer.Model.Entidades.Interfaces;
+
+type
+   TModelEntidadesFactory = class(TInterfacedObject, IModelEntidadeFactory)
+   private
+      { Private declarations }
+      fTipoConexao: TTipoConexao;
+      fAplicativo: IModelEntidade;
+      fPais: IModelEntidade;
+      fRegiao: IModelEntidade;
+      fEstado: IModelEntidade;
+      fCidade: IModelEntidade;
+      fZona: IModelEntidade;
+      fBairro: IModelEntidade;
+      fPessoa: IModelEntidade;
+      fEstabelecimento: IModelEntidade;
+      fUsuario: IModelEntidade;
+      fCliente: IModelEntidade;
+      fPlanoDePagamento: IModelEntidade;
+      fEmprestimo: IModelEntidade;
+   public
+      { Public declarations }
+      constructor Create(const ATipoConexao: TTipoConexao = tcFireDAC);
+      destructor Destroy; override;
+      class function New(const ATipoConexao: TTipoConexao = tcFireDAC): IModelEntidadeFactory;
+      function Aplicativo: IModelEntidade;
+      function Pais: IModelEntidade;
+      function Regiao: IModelEntidade;
+      function Estado: IModelEntidade;
+      function Cidade: IModelEntidade;
+      function Zona: IModelEntidade;
+      function Bairro: IModelEntidade;
+      function Pessoa: IModelEntidade;
+      function Estabelecimento: IModelEntidade;
+      function Usuario: IModelEntidade;
+      function Cliente: IModelEntidade;
+      function PlanoDePagamento: IModelEntidade;
+      function Emprestimo: IModelEntidade;
+    end;
+
+implementation
+
+uses
+   EasyMoneyServer.Model.Entidades.Aplicativo,
+   EasyMoneyServer.Model.Entidades.Zona,
+   EasyMoneyServer.Model.Entidades.Regiao,
+   EasyMoneyServer.Model.Entidades.Pais,
+   EasyMoneyServer.Model.Entidades.Estado,
+   EasyMoneyServer.Model.Entidades.Cidade,
+   EasyMoneyServer.Model.Entidades.Bairro,
+   EasyMoneyServer.Model.Entidades.Pessoa,
+   EasyMoneyServer.Model.Entidades.Estabelecimento,
+   EasyMoneyServer.Model.Entidades.Usuario,
+   EasyMoneyServer.Model.Entidades.Cliente,
+   EasyMoneyServer.Model.Entidades.PlanoDePagamento,
+   EasyMoneyServer.Model.Entidades.Emprestimo;
+
+{ TModelEntidadesFactory }
+
+destructor TModelEntidadesFactory.Destroy;
+begin
+
+   inherited;
+end;
+
+function TModelEntidadesFactory.Emprestimo: IModelEntidade;
+begin
+   if not Assigned(fEmprestimo) then
+      fEmprestimo := TModelEntidadeEmprestimo.New(fTipoConexao);
+   Result := fEmprestimo;
+end;
+
+function TModelEntidadesFactory.Estabelecimento: IModelEntidade;
+begin
+   if not Assigned(fEstabelecimento) then
+      fEstabelecimento := TModelEntidadeEstabelecimento.New(fTipoConexao);
+   Result := fEstabelecimento;
+end;
+
+function TModelEntidadesFactory.Estado: IModelEntidade;
+begin
+   if not Assigned(fEstado) then
+      fEstado := TModelEntidadeEstado.New(fTipoConexao);
+   Result := fEstado;
+end;
+
+class function TModelEntidadesFactory.New(const ATipoConexao: TTipoConexao = tcFireDAC): IModelEntidadeFactory;
+begin
+   Result := Self.Create(ATipoConexao);
+end;
+
+function TModelEntidadesFactory.Pais: IModelEntidade;
+begin
+   if not Assigned(fPais) then
+      fPais := TModelEntidadePais.New(fTipoConexao);
+   Result := fPais;
+end;
+
+function TModelEntidadesFactory.Pessoa: IModelEntidade;
+begin
+   if not Assigned(fPessoa) then
+      fPessoa := TModelEntidadePessoa.New(fTipoConexao);
+   Result := fPessoa;
+end;
+
+function TModelEntidadesFactory.PlanoDePagamento: IModelEntidade;
+begin
+   if not Assigned(fPlanoDePagamento) then
+      fPlanoDePagamento := TModelEntidadePlanoDePagamento.New(fTipoConexao);
+   Result := fPlanoDePagamento;
+end;
+
+function TModelEntidadesFactory.Regiao: IModelEntidade;
+begin
+   if not Assigned(fRegiao) then
+      fRegiao := TModelEntidadeRegiao.New(fTipoConexao);
+   Result := fRegiao;
+end;
+
+function TModelEntidadesFactory.Usuario: IModelEntidade;
+begin
+   if not Assigned(fUsuario) then
+      fUsuario := TModelEntidadeUsuario.New(fTipoConexao);
+   Result := fUsuario;
+end;
+
+function TModelEntidadesFactory.Zona: IModelEntidade;
+begin
+   if not Assigned(fZona) then
+      fZona := TModelEntidadeZona.New(fTipoConexao);
+   Result := fZona;
+end;
+
+function TModelEntidadesFactory.Aplicativo: IModelEntidade;
+begin
+   if not Assigned(fAplicativo) then
+      fAplicativo := TModelEntidadeAplicativo.New(fTipoConexao);
+   Result := fAplicativo;
+end;
+
+function TModelEntidadesFactory.Bairro: IModelEntidade;
+begin
+   if not Assigned(fBairro) then
+      fBairro := TModelEntidadeBairro.New(fTipoConexao);
+   Result := fBairro;
+end;
+
+function TModelEntidadesFactory.Cidade: IModelEntidade;
+begin
+   if not Assigned(fCidade) then
+      fCidade := TModelEntidadeCidade.New(fTipoConexao);
+   Result := fCidade;
+end;
+
+function TModelEntidadesFactory.Cliente: IModelEntidade;
+begin
+   if not Assigned(fCliente) then
+      fCliente := TModelEntidadeCliente.New(fTipoConexao);
+   Result := fCliente;
+end;
+
+constructor TModelEntidadesFactory.Create(const ATipoConexao: TTipoConexao = tcFireDAC);
+begin
+   fTipoConexao := ATipoConexao;
+end;
+
+end.

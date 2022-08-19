@@ -1,0 +1,56 @@
+unit Cadastro.Controller.Pessoa;
+
+interface
+
+uses
+   SysUtils, Classes, DB,
+   Cadastro.Controller.Interfaces,
+   Cadastro.Model.Cadastro;
+
+type
+   TPessoaController = class(TInterfacedObject, IPessoaController)
+   private
+      { Private declarations }
+      fModel: TModelCadastro;
+      constructor Create;
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      destructor Destroy; override;
+      class function New: IPessoaController;
+      procedure Open(Pessoa: TDataSource; Endereco: TDataSource);
+   end;
+
+implementation
+
+{ TPessoaController }
+
+
+{ TPessoaController }
+
+constructor TPessoaController.Create;
+begin
+   fModel := TModelCadastro.Create(nil);
+end;
+
+destructor TPessoaController.Destroy;
+begin
+   FreeAndNil(fModel);
+  inherited;
+end;
+
+class function TPessoaController.New: IPessoaController;
+begin
+   Result := Self.Create;
+end;
+
+procedure TPessoaController.Open(Pessoa: TDataSource; Endereco: TDataSource);
+begin
+   if fModel.qryPessoas.Active then
+      fModel.qryPessoas.Close;
+   fModel.qryPessoas.Open();
+   Pessoa.DataSet := fModel.qryPessoas;
+end;
+
+end.

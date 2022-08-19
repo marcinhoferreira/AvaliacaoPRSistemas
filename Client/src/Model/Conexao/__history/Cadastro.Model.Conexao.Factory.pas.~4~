@@ -1,0 +1,88 @@
+unit Cadastro.Model.Conexao.Factory;
+
+interface
+
+uses
+  Cadastro.Model.Conexao.Interfaces;
+
+type
+   TModelConexaoFactory = class(TInterfacedObject, IModelConexaoFactory)
+   private
+      { Private declarations }
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IModelConexaoFactory;
+      function Conexao: IModelConexao;
+      function Query: IModelQuery;
+   end;
+
+implementation
+
+uses
+  Cadastro.Model.Conexao.FireDAC.Conexao,
+  Cadastro.Model.Conexao.FireDAC.Query;
+
+{ TModelConexaoFactory }
+
+function TModelConexaoFactory.Conexao: IModelConexao;
+begin
+   case fTipoConexao of
+      tcFireDAC: Result := TModelConexaoFireDACConexao.New;
+      //tcRESTDW: Result := TModelConexaoRestDWConexao.New;
+   end;
+end;
+
+constructor TModelConexaoFactory.Create(const ATipoConexao: TTipoConexao = tcFireDAC);
+begin
+   fTipoConexao := ATipoConexao;
+end;
+
+destructor TModelConexaoFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoFactory.New(const ATipoConexao: TTipoConexao = tcFireDAC): IModelConexaoFactory;
+begin
+   Result := Self.Create(ATipoConexao);
+end;
+
+function TModelConexaoFactory.Query: IModelQuery;
+begin
+   case fTipoConexao of
+      tcFireDAC: Result := TModelConexaoFireDACQuery.New(Self.Conexao);
+      //tcRESTDW: Result := TModelConexaoRestDWQuery.New(Self.Conexao);
+   end;
+end;
+
+procedure TModelConexaoFactory.SetaTipoConexao;
+var
+   AConexao: IModelConexao;
+begin
+   try
+      case fTipoConexao of
+         tcFireDAC: AConexao := TModelConexaoFireDACConexao.New;
+         //tcRESTDW: AConexao := TModelConexaoRestDWConexao.New;
+      end;
+   except
+      case fTipoConexao of
+         tcFireDAC: fTipoConexao := tcRESTDW;
+         tcRESTDW: fTipoConexao := tcFireDAC;
+      end;
+   end;
+end;
+
+function TModelConexaoFactory.StoredProc: IModelStoredProc;
+begin
+   case fTipoConexao of
+      tcFireDAC: Result := TModelConexaoFireDACStoredProc.New(Self.Conexao);
+      //tcRESTDW: Result := TModelConexaoRestDWQuery.New(Self.Conexao);
+   end;
+end;
+
+end.

@@ -1,0 +1,11 @@
+unit Cadastro.Model.Interfaces;
+
+interface
+
+type
+   IPessoaModel = interface
+      ['{5A6E924E-DE05-4D4E-89B0-E629E38CEAFE}']
+   end;
+implementation
+
+end.

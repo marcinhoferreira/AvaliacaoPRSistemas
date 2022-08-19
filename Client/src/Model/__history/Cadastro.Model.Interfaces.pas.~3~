@@ -1,0 +1,21 @@
+unit LealSoftwares.Model.Interfaces;
+
+interface
+
+type
+   IModel = interface
+      ['{F6E43987-3E8A-4BDF-BE5B-80746B5B42FE}']
+      procedure Initialize;
+   end;
+
+   IJSONModel = interface
+      ['{12999041-8205-4FBA-B611-791EE414483A}']
+   end;
+
+   IModelLogOperacao = interface
+      ['{FB04D95B-EA5C-4C4F-95BC-5B1BDAFDF73F}']
+   end;
+
+implementation
+
+end.

@@ -1,0 +1,9 @@
+unit Cadastro.Controller;
+
+interface
+
+type
+   TController = class(TInterfacedObject, IController)
+implementation
+
+end.

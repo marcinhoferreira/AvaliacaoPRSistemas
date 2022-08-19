@@ -1,0 +1,212 @@
+unit Cadastro.Model.Entidades.Pessoa;
+
+interface
+
+uses
+   SysUtils, Classes, Data.DB, System.NetEncoding, System.Json, REST.Json,
+   Cadastro.Model.Conexao.Interfaces,
+   Cadastro.Model.Entidades.Interfaces,
+   Cadastro.Classe.Pessoa;
+
+type
+   TModelEntidadePessoa = class(TInterfacedObject, IModelEntidade)
+   private
+      { Private declarations }
+      fQuery: IModelQuery;
+      function GetEndereco(const Id: Integer): TEndereco;
+   public
+      { Public declarations }
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IModelEntidade;
+      function DataSet(const Value: TDataSource): IModelEntidade; overload;
+      function DataSet(const Value: TDataSet): IModelEntidade; overload;
+      procedure Open(const AWhere: String = '');
+      function GetPessoa(const Id: Integer): TPessoa;
+      function GetPessoas(const Id: Integer = 0): TListaPessoas;
+      function Cadastra(APessoa: TPessoa): Integer;
+   end;
+
+implementation
+
+uses
+   StrUtils,
+   Cadastro.Model.Conexao.Factory;
+
+{ TModelEntidadePessoa }
+
+function TModelEntidadePessoa.Cadastra(APessoa: TPessoa): Integer;
+   procedure AtualizaEndereco(const Id: Integer; AEndereco: TEndereco);
+   var
+      AModelEntidade: IModelEntidade;
+      ASQL: String;
+      AQuery: IModelQuery;
+   begin
+      AQuery := TModelConexaoFactory.New.Query;
+      ASQL := '';
+      ASQL := ASQL + 'SELECT id_pessoa, cep, endereco, numero, cidade, estado ';
+      ASQL := ASQL + 'FROM dbo.enderecos ';
+      ASQL := ASQL + 'WHERE id_pessoa = ' + Id.ToString;
+      AQuery.Open(ASQL);
+      with AQuery do
+         begin
+            if Query.IsEmpty then
+               begin
+                  Query.Append;
+                  Query.FieldByName('id_pessoa').AsInteger := Id;
+               end
+            else
+               Query.Edit;
+            Query.FieldByName('cep').AsInteger := AEndereco.Cep;
+            Query.FieldByName('endereco').AsString := AEndereco.Endereco;
+            Query.FieldByName('numero').AsString := AEndereco.Numero;
+            Query.FieldByName('cidade').AsString := AEndereco.Cidade;
+            Query.FieldByName('estado').AsString := AEndereco.Estado;
+            Query.Post;
+            Query.Close;
+         end;
+   end;
+begin
+   Open('id_pessoa = ' + APessoa.Id.ToString);
+   with fQuery do
+      begin
+         if Query.IsEmpty then
+            Query.Append
+         else
+            Query.Edit;
+         Query.FieldByName('nome').AsString := APessoa.Nome;
+         if APessoa.Cpf.IsEmpty then
+            Query.FieldByName('cpf').Clear
+         else
+            Query.FieldByName('cpf').Value := APessoa.Cpf;
+         if APessoa.RG.IsEmpty then
+            Query.FieldByName('rg').Clear
+         else
+            Query.FieldByName('rg').Value := APessoa.RG;
+         Query.FieldByName('mae_nome').AsString := APessoa.Mae;
+         Query.FieldByName('pai_nome').AsString := APessoa.Pai;
+         Query.Post;
+         AtualizaEndereco(Query.FieldByName('id_pessoa').AsInteger,
+                          APessoa.Endereco);
+         Result := Query.FieldByName('id_pessoa').AsInteger;
+      end;
+end;
+
+constructor TModelEntidadePessoa.Create;
+begin
+   fQuery := TModelConexaoFactory.New.Query;
+end;
+
+function TModelEntidadePessoa.DataSet(const Value: TDataSet): IModelEntidade;
+begin
+   Result := Self;
+   Value.Assign(TDataSet(fQuery.Query));
+end;
+
+function TModelEntidadePessoa.DataSet(const Value: TDataSource): IModelEntidade;
+begin
+   Result := Self;
+   Value.DataSet := fQuery.Query;
+end;
+
+destructor TModelEntidadePessoa.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelEntidadePessoa.GetEndereco(const Id: Integer): TEndereco;
+var
+   AModelEntidade: IModelEntidade;
+   ASQL: String;
+   AQuery: IModelQuery;
+begin
+   AQuery := TModelConexaoFactory.New.Query;
+   ASQL := '';
+   ASQL := ASQL + 'SELECT id_pessoa, cep, endereco, numero, cidade, estado ';
+   ASQL := ASQL + 'FROM dbo.enderecos ';
+   ASQL := ASQL + 'WHERE id_pessoa = ' + Id.ToString;
+   AQuery.Open(ASQL);
+   Result := TEndereco.Create;
+   with AQuery do
+      if not Query.IsEmpty then
+         begin
+            Result.Cep := Query.FieldByName('cep').AsInteger;
+            Result.Endereco := Query.FieldByName('endereco').AsString;
+            Result.Numero := Query.FieldByName('numero').AsString;
+            Result.Cidade := Query.FieldByName('cidade').AsString;
+            Result.Estado := Query.FieldByName('estado').AsString;
+         end;
+end;
+
+function TModelEntidadePessoa.GetPessoa(const Id: Integer): TPessoa;
+begin
+   Open('id_pessoa = ' + IntToStr(Id));
+   Result := TPessoa.Create;
+   with fQuery do
+      if not Query.IsEmpty then
+         begin
+            Result.Id := Query.FieldByName('id_pessoa').AsInteger;
+            if not Query.FieldByName('cpf').IsNull then
+               Result.Cpf := Query.FieldByName('cpf').AsFloat.ToString;
+            if not Query.FieldByName('rg').IsNull then
+               Result.Rg := Query.FieldByName('rg').AsFloat.ToString;
+            Result.Nome := Query.FieldByName('nome').AsString;
+            Result.Mae := Query.FieldByName('mae_nome').AsString;
+            Result.Pai := Query.FieldByName('pai_nome').AsString;
+            Result.Endereco := GetEndereco(Query.FieldByName('id_pessoa').AsInteger);
+         end;
+end;
+
+function TModelEntidadePessoa.GetPessoas(const Id: Integer): TListaPessoas;
+var
+   AMemoryStream: TMemoryStream;
+   AStringStream: TStringStream;
+   ATempStr: String;
+   APessoa: TPessoa;
+begin
+   Result := TListaPessoas.Create;
+   if Id <> 0 then
+      Open('id_pessoa = ' + IntToStr(Id))
+   else
+      Open();
+   with fQuery do
+      if not Query.IsEmpty then
+         begin
+            Query.First;
+            while not Query.Eof do
+               begin
+                  APessoa := TPessoa.Create;
+                  APessoa.Id := Query.FieldByName('id_pessoa').AsInteger;
+                  APessoa.Cpf := Query.FieldByName('cpf').AsFloat.ToString;
+                  APessoa.Rg := Query.FieldByName('rg').AsFloat.ToString;
+                  APessoa.Nome := Query.FieldByName('nome').AsString;
+                  APessoa.Mae := Query.FieldByName('mae_nome').AsString;
+                  APessoa.Pai := Query.FieldByName('pai_nome').AsString;
+                  APessoa.Endereco := GetEndereco(Query.FieldByName('id_pessoa').AsInteger);
+                  Result.Add(APessoa);
+                  Query.Next;
+               end;
+         end;
+end;
+
+class function TModelEntidadePessoa.New: IModelEntidade;
+begin
+   Result := Self.Create;
+end;
+
+procedure TModelEntidadePessoa.Open(const AWhere: String);
+var
+   ASQL: String;
+begin
+   ASQL := '';
+   ASQL := ASQL + 'SELECT id_pessoa, cpf, rg, nome, mae_nome, pai_nome ';
+   ASQL := ASQL + 'FROM dbo.pessoas ';
+   if AWhere <> '' then
+      ASQL := ASQL + 'WHERE ' + AWhere;
+   ASQL := ASQL + 'ORDER BY nome';
+   fQuery.Open(ASQL);
+   fQuery.Query.FieldByName('id_pessoa').AutoGenerateValue := TAutoRefreshFlag.arAutoInc;
+end;
+
+end.

@@ -1,0 +1,347 @@
+unit Cadastro.View.Cadastro;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
+  FMX.Controls.Presentation, FMX.StdCtrls, Data.Bind.Components,
+  Data.Bind.DBScope, Data.DB,
+  Cadastro.Controller.Interfaces, Cadastro.Classe.Pessoa,
+  System.Rtti, FMX.Grid.Style, FMX.ScrollBox,
+  FMX.Grid, Data.Bind.EngExt, Fmx.Bind.DBEngExt, FMX.ListView.Types,
+  FMX.ListView.Appearances, FMX.ListView.Adapters.Base, MultiDetailAppearanceU,
+  FMX.ListView, System.Bindings.Outputs, Fmx.Bind.Editors, Data.Bind.Controls,
+  FMX.Edit, Fmx.Bind.Navigator, ACBrBase, ACBrSocket, ACBrCEP, FireDAC.UI.Intf,
+  FireDAC.FMXUI.Wait, FireDAC.Stan.Intf, FireDAC.Comp.UI;
+
+type
+  TfrmCadastro = class(TForm)
+    lytAreaDeTrabalho: TLayout;
+    lblNome: TLabel;
+    edtNome: TEdit;
+    edtCPF: TEdit;
+    lblCPF: TLabel;
+    edtRG: TEdit;
+    lblRG: TLabel;
+    lblMaeNome: TLabel;
+    edtMaeNome: TEdit;
+    lblPaiNome: TLabel;
+    edtPaiNome: TEdit;
+    lblCEP: TLabel;
+    edtCEP: TEdit;
+    lblEndereco: TLabel;
+    edtEndereco: TEdit;
+    lblNumero: TLabel;
+    edtNumero: TEdit;
+    lblCidade: TLabel;
+    edtCidade: TEdit;
+    edtEstado: TEdit;
+    lblEstado: TLabel;
+    ACBrCEP1: TACBrCEP;
+    lytBarraDeFerramentas: TLayout;
+    btnImprimir: TSpeedButton;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    btnIncluir: TSpeedButton;
+    btnAlterar: TSpeedButton;
+    btnExcluir: TSpeedButton;
+    btnGravar: TSpeedButton;
+    btnCancelar: TSpeedButton;
+    lytNavegador: TLayout;
+    btnPrimeiro: TSpeedButton;
+    btnAnterior: TSpeedButton;
+    btnProximo: TSpeedButton;
+    btnUltimo: TSpeedButton;
+    procedure FormCreate(Sender: TObject);
+    procedure edtCEPExit(Sender: TObject);
+    procedure ACBrCEP1BuscaEfetuada(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnImprimirClick(Sender: TObject);
+    procedure btnIncluirClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure btnExcluirClick(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnProximoClick(Sender: TObject);
+    procedure btnAnteriorClick(Sender: TObject);
+    procedure btnPrimeiroClick(Sender: TObject);
+    procedure btnUltimoClick(Sender: TObject);
+  private
+    { Private declarations }
+    fController: IController;
+    fPessoa: TPessoa;
+    fLista: TListaPessoas;
+    fIndice: Integer;
+    fOperacao: Word;
+    procedure CarregaPessoa(const APessoa: TPessoa);
+    procedure HabilitaControles(const AEnable: Boolean = True);
+    procedure LimpaCampos;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCadastro: TfrmCadastro;
+
+implementation
+
+uses
+   Cadastro.Controller,
+   Cadastro.Model.Entidades.Pessoa,
+   Cadastro.Model.Relatorios.Interfaces,
+   Cadastro.Model.Relatorios.FR.Pessoa;
+
+{$R *.fmx}
+
+{ TfrmCadastro }
+
+procedure TfrmCadastro.ACBrCEP1BuscaEfetuada(Sender: TObject);
+begin
+   if ACBrCEP1.Enderecos.Count = 1 then
+      begin
+         with ACBrCEP1.Enderecos[0] do
+            begin
+               edtEndereco.Text := AnsiUpperCase(Tipo_Logradouro +
+                                                 ' ' +
+                                                 Logradouro);
+               edtCidade.Text := AnsiUpperCase(Municipio);
+               edtEstado.Text := AnsiUpperCase(UF);
+            end;
+      end;
+end;
+
+procedure TfrmCadastro.btnAlterarClick(Sender: TObject);
+begin
+   fOperacao := 2;
+   HabilitaControles(True);
+end;
+
+procedure TfrmCadastro.btnAnteriorClick(Sender: TObject);
+begin
+   Dec(fIndice, 1);
+   fPessoa := fLista.Items[fIndice];
+   CarregaPessoa(fPessoa);
+   HabilitaControles(False);
+end;
+
+procedure TfrmCadastro.btnCancelarClick(Sender: TObject);
+begin
+   edtNome.Text := fPessoa.Nome;
+   edtCPF.Text := fPessoa.Cpf;
+   edtRG.Text := fPessoa.RG;
+   edtMaeNome.Text := fPessoa.Mae;
+   edtPaiNome.Text := fPessoa.Pai;
+   edtCEP.Text := fPessoa.Endereco.Cep.ToString;
+   edtEndereco.Text := fPessoa.Endereco.Endereco;
+   edtNumero.Text := fPessoa.Endereco.Numero;
+   edtCidade.Text := fPessoa.Endereco.Cidade;
+   edtEstado.Text := fPessoa.Endereco.Estado;
+   fOperacao := 0;
+   HabilitaControles(False);
+end;
+
+procedure TfrmCadastro.btnExcluirClick(Sender: TObject);
+begin
+   if TModelEntidadePessoa(fController.Entidades.Pessoa).Deleta(fPessoa.Id) then
+      begin
+         fIndice := -1;
+         fLista := TModelEntidadePessoa(fController.Entidades.Pessoa).GetPessoas;
+
+         if fLista.Tamanho > 0 then
+            begin
+               fIndice := 0;
+               fPessoa := fLista.Items[fIndice];
+            end;
+
+         if Assigned(fPessoa) then
+            CarregaPessoa(fPessoa);
+
+         fOperacao := 0;
+      end;
+end;
+
+procedure TfrmCadastro.btnGravarClick(Sender: TObject);
+var
+   AIndice: Integer;
+begin
+   fPessoa.Nome := edtNome.Text;
+   fPessoa.Cpf := edtCPF.Text;
+   fPessoa.RG := edtRG.Text;
+   fPessoa.Mae := edtMaeNome.Text;
+   fPessoa.Pai := edtPaiNome.Text;
+   fPessoa.Endereco.Cep := edtCEP.Text.ToInteger;
+   fPessoa.Endereco.Endereco := edtEndereco.Text;
+   fPessoa.Endereco.Numero := edtNumero.Text;
+   fPessoa.Endereco.Cidade := edtCidade.Text;
+   fPessoa.Endereco.Estado := edtEstado.Text;
+
+   fPessoa.Id := TModelEntidadePessoa(fController.Entidades.Pessoa)
+                    .Cadastra(fPessoa);
+
+   AIndice := fLista.IndexOf(fPessoa);
+
+   if AIndice >= 0 then
+      fLista.Items[AIndice] := fPessoa
+   else
+      fLista.Add(fPessoa);
+
+   fOperacao := 0;
+   HabilitaControles(False);
+end;
+
+procedure TfrmCadastro.btnImprimirClick(Sender: TObject);
+var
+   ARelatorio: IModelRelatorio;
+begin
+   ARelatorio := TModelRelatorioPessoa.New;
+   TModelRelatorioPessoa(ARelatorio)
+      .Executa;
+end;
+
+procedure TfrmCadastro.btnIncluirClick(Sender: TObject);
+begin
+   fOperacao := 1;
+   LimpaCampos;
+   CarregaPessoa(fPessoa);
+   HabilitaControles(True);
+end;
+
+procedure TfrmCadastro.btnPrimeiroClick(Sender: TObject);
+begin
+   fIndice := 0;
+   fPessoa := fLista.Items[fIndice];
+   CarregaPessoa(fPessoa);
+   HabilitaControles(False);
+end;
+
+procedure TfrmCadastro.btnProximoClick(Sender: TObject);
+begin
+   Inc(fIndice, 1);
+   fPessoa := fLista.Items[fIndice];
+   CarregaPessoa(fPessoa);
+   HabilitaControles(False);
+end;
+
+procedure TfrmCadastro.btnUltimoClick(Sender: TObject);
+begin
+   fIndice := fLista.Tamanho - 1;
+   fPessoa := fLista.Items[fIndice];
+   CarregaPessoa(fPessoa);
+   HabilitaControles(False);
+end;
+
+procedure TfrmCadastro.CarregaPessoa(const APessoa: TPessoa);
+begin
+   edtNome.Text := APessoa.Nome;
+   if APessoa.Cpf.IsEmpty then
+      edtCpf.Text := ''
+   else
+      edtCpf.Text := APessoa.Cpf;
+   if APessoa.Rg.IsEmpty then
+      edtRG.Text := ''
+   else
+      edtRG.Text := APessoa.Rg;
+   edtMaeNome.Text := APessoa.Mae;
+   edtPaiNome.Text := APessoa.Pai;
+   edtCep.Text := APessoa.Endereco.Cep.ToString;
+   edtEndereco.Text := APessoa.Endereco.Endereco;
+   edtNumero.Text := APessoa.Endereco.Numero;
+   edtCidade.Text := APessoa.Endereco.Cidade;
+   edtEstado.Text := APessoa.Endereco.Estado;
+end;
+
+procedure TfrmCadastro.edtCEPExit(Sender: TObject);
+begin
+   if (TEdit(Sender).Text <> '') and
+      (TEdit(Sender).Text <> fLista.Items[fIndice].Endereco.Cep.ToString) then
+      begin
+         try
+            ACBrCEP1.BuscarPorCEP(TEdit(Sender).Text);
+         except
+            on E: Exception do
+               raise Exception.Create('Erro ao consultar CEP:'#13 + E.Message);
+         end;
+      end;
+end;
+
+procedure TfrmCadastro.FormCreate(Sender: TObject);
+begin
+   fController := TController.New;
+   fPessoa := TPessoa.Create;
+   fLista := TListaPessoas.Create;
+   fIndice := -1;
+   fLista := TModelEntidadePessoa(fController.Entidades.Pessoa).GetPessoas;
+   if fLista.Tamanho > 0 then
+      begin
+         fIndice := 0;
+         fPessoa := fLista.Items[fIndice];
+      end;
+
+   if Assigned(fPessoa) then
+      CarregaPessoa(fPessoa);
+
+   fOperacao := 0;
+   HabilitaControles(False);
+   // Configurando o componente ACBrCEP
+   ACBrCEP1.WebService := wsBuscarCep;
+   ACBrCEP1.ChaveAcesso := '1STa9eKhhfKvc7Ljh6W6CO5Kr/bFOl.';
+end;
+
+procedure TfrmCadastro.FormDestroy(Sender: TObject);
+begin
+   FreeAndNil(fLista);
+   FreeAndNil(fPessoa);
+end;
+
+procedure TfrmCadastro.HabilitaControles(const AEnable: Boolean);
+begin
+   edtNome.Enabled := AEnable;
+   edtCPF.Enabled := AEnable;
+   edtRG.Enabled := AEnable;
+   edtMaeNome.Enabled := AEnable;
+   edtPaiNome.Enabled := AEnable;
+   edtCEP.Enabled := AEnable;
+   edtEndereco.Enabled := AEnable;
+   edtNumero.Enabled := AEnable;
+   edtCidade.Enabled := AEnable;
+   edtEstado.Enabled := AEnable;
+   // Habilitando botôes de operações
+   btnIncluir.Enabled := fOperacao = 0;
+   btnAlterar.Enabled := (fOperacao = 0) and
+                         Assigned(fPessoa);
+   btnExcluir.Enabled := (fOperacao = 0) and
+                         Assigned(fPessoa);
+   btnGravar.Enabled := fOperacao In [1, 2];
+   btnCancelar.Enabled := fOperacao In [1, 2];
+   btnImprimir.Enabled := fOperacao = 0;
+   // Habilitando botôes de navegação
+   btnPrimeiro.Enabled := (fOperacao = 0) and
+                          (fLista.Tamanho > 0) and
+                          (fIndice <> 0);
+   btnAnterior.Enabled := (fOperacao = 0) and
+                          (fLista.Tamanho > 0) and
+                          (fIndice <> 0);
+   btnProximo.Enabled := (fOperacao = 0) and
+                         (fLista.Tamanho > 0) and
+                         (fIndice <> (fLista.Tamanho - 1));
+   btnUltimo.Enabled := (fOperacao = 0) and
+                        (fLista.Tamanho > 0) and
+                        (fIndice <> (fLista.Tamanho - 1));
+end;
+
+procedure TfrmCadastro.LimpaCampos;
+begin
+   fPessoa.Id := -1;
+   fPessoa.Nome := '';
+   fPessoa.Cpf := '';
+   fPessoa.RG := '';
+   fPessoa.Mae := '';
+   fPessoa.Pai := '';
+   fPessoa.Endereco.CEP := 0;
+   fPessoa.Endereco.Endereco := '';
+   fPessoa.Endereco.Numero := '';
+   fPessoa.Endereco.Cidade := '';
+   fPessoa.Endereco.Estado := '';
+end;
+
+end.

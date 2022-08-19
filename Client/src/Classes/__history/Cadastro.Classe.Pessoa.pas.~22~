@@ -1,0 +1,283 @@
+unit Cadastro.Classe.Pessoa;
+
+interface
+
+uses
+   SysUtils, Classes, System.JSON;
+
+type
+   TEndereco = class(TObject)
+   private
+      { Private declarations }
+      fCep: Integer;
+      fEndereco: String;
+      fNumero: String;
+      fCidade: String;
+      fEstado: String;
+      function GetCep: Integer;
+      function GetCidade: String;
+      function GetEndereco: String;
+      function GetEstado: String;
+      function GetNumero: String;
+      procedure SetCep(const Value: Integer);
+      procedure SetCidade(const Value: String);
+      procedure SetEndereco(const Value: String);
+      procedure SetEstado(const Value: String);
+      procedure SetNumero(const Value: String);
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      property Cep: Integer Read GetCep Write SetCep;
+      property Endereco: String Read GetEndereco Write SetEndereco;
+      property Numero: String Read GetNumero Write SetNumero;
+      property Cidade: String Read GetCidade Write SetCidade;
+      property Estado: String Read GetEstado Write SetEstado;
+   end;
+
+   TPessoa = class(TObject)
+   private
+      { Private declarations }
+      fId: Integer;
+      fNome: String;
+      fCpf: String;
+      fRg: String;
+      fMae: String;
+      fPai: String;
+      fEndereco: TEndereco;
+      function GetCpf: String;
+      function GetEndereco: TEndereco;
+      function GetId: Integer;
+      function GetMae: String;
+      function GetNome: String;
+      function GetPai: String;
+      function GetRg: String;
+      procedure SetCpf(const Value: String);
+      procedure SetEndereco(const Value: TEndereco);
+      procedure SetId(const Value: Integer);
+      procedure SetMae(const Value: String);
+      procedure SetNome(const Value: String);
+      procedure SetPai(const Value: String);
+      procedure SetRg(const Value: String);
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      constructor Create;
+      destructor Destroy; override;
+      property Id: Integer Read GetId Write SetId;
+      property Nome: String Read GetNome Write SetNome;
+      property Cpf: String Read GetCpf Write SetCpf;
+      property Rg: String Read GetRg Write SetRg;
+      property Mae: String Read GetMae Write SetMae;
+      property Pai: String Read GetPai Write SetPai;
+      property Endereco: TEndereco Read GetEndereco Write SetEndereco;
+   end;
+
+   TPessoaHelper = class helper for TPessoa
+   private
+      { Private declarations }
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      class function FromJSON(const Data: TJSONOBject): TPessoa;
+   end;
+
+   TArrayPessoas = Array Of TPessoa;
+
+   TListaPessoas = class(TObject)
+   private
+      { Private declarations }
+      fItems: TArrayPessoas;
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      destructor Destroy; override;
+      function Tamanho: Integer;
+      function Add(APessoa: TPessoa): Integer;
+      property Items: TArrayPessoas Read fItems Write fItems;
+   end;
+
+implementation
+
+uses
+   REST.Json;
+
+{ TPessoa }
+
+constructor TPessoa.Create;
+begin
+   fEndereco := TEndereco.Create;
+end;
+
+destructor TPessoa.Destroy;
+begin
+   FreeAndNil(fEndereco);
+  inherited;
+end;
+
+function TPessoa.GetCpf: String;
+begin
+   Result := fCpf;
+end;
+
+function TPessoa.GetEndereco: TEndereco;
+begin
+   Result := fEndereco;
+end;
+
+function TPessoa.GetId: Integer;
+begin
+   Result := fId;
+end;
+
+function TPessoa.GetMae: String;
+begin
+   Result := fMae;
+end;
+
+function TPessoa.GetNome: String;
+begin
+   Result := fNome;
+end;
+
+function TPessoa.GetPai: String;
+begin
+   Result := fPai;
+end;
+
+function TPessoa.GetRg: String;
+begin
+   Result := fRg;
+end;
+
+procedure TPessoa.SetCpf(const Value: String);
+begin
+   if Value <> fCpf then
+      fCpf := Value;
+end;
+
+procedure TPessoa.SetEndereco(const Value: TEndereco);
+begin
+   if Value <> fEndereco then
+      fEndereco := Value;
+end;
+
+procedure TPessoa.SetId(const Value: Integer);
+begin
+   if Value <> fId then
+      fId := Value;
+end;
+
+procedure TPessoa.SetMae(const Value: String);
+begin
+   if Value <> fMae then
+      fMae := Value;
+end;
+
+procedure TPessoa.SetNome(const Value: String);
+begin
+   if Value <> fNome then
+      fNome := Value;
+end;
+
+procedure TPessoa.SetPai(const Value: String);
+begin
+   if Value <> fPai then
+      fPai := Value;
+end;
+
+procedure TPessoa.SetRg(const Value: String);
+begin
+   if Value <> fRg then
+      fRg := Value;
+end;
+
+{ TEndereco }
+
+function TEndereco.GetCep: Integer;
+begin
+   Result := fCep;
+end;
+
+function TEndereco.GetCidade: String;
+begin
+   Result := fCidade;
+end;
+
+function TEndereco.GetEndereco: String;
+begin
+   Result := fEndereco;
+end;
+
+function TEndereco.GetEstado: String;
+begin
+   Result := fEstado;
+end;
+
+function TEndereco.GetNumero: String;
+begin
+   Result := fNumero;
+end;
+
+procedure TEndereco.SetCep(const Value: Integer);
+begin
+   if Value <> fCep then
+      fCep := Value;
+end;
+
+procedure TEndereco.SetCidade(const Value: String);
+begin
+   if Value <> fCidade then
+      fCidade := Value;
+end;
+
+procedure TEndereco.SetEndereco(const Value: String);
+begin
+   if Value <> fEndereco then
+      fEndereco := Value;
+end;
+
+procedure TEndereco.SetEstado(const Value: String);
+begin
+   if Value <> fEstado then
+      fEstado := Value;
+end;
+
+procedure TEndereco.SetNumero(const Value: String);
+begin
+   if Value <> fNumero then
+      fNumero := Value;
+end;
+
+{ TListaPessoas }
+
+function TListaPessoas.Add(APessoa: TPessoa): Integer;
+begin
+   SetLength(fItems, Tamanho + 1);
+   fItems[High(fItems)] := APessoa;
+   Result := High(fItems);
+end;
+
+destructor TListaPessoas.Destroy;
+begin
+
+  inherited;
+end;
+
+function TListaPessoas.Tamanho: Integer;
+begin
+   Result := Length(fItems);
+end;
+
+{ TPessoaHelper }
+
+class function TPessoaHelper.FromJSON(const Data: TJSONOBject): TPessoa;
+begin
+   Result := TPessoa.Create;
+   Result := TJson.JsonToObject<TPessoa>(Data);
+end;
+
+end.

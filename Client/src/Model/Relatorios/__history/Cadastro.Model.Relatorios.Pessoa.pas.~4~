@@ -1,0 +1,21 @@
+unit Cadastro.Model.Relatorios.Pessoa;
+
+interface
+
+uses
+   SysUtils, Classes,
+   Cadastro.Model.Relatorios.Interfaces;
+
+type
+   TModelRelatorioPessoa = class(TInterfacedObject, IModelRelatorio)
+   private
+      { Private declarations }
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+   end;
+
+implementation
+
+end.

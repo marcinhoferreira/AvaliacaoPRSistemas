@@ -1,0 +1,113 @@
+unit Cadastro.Model.Relatorios.FR.Pessoa;
+
+interface
+
+uses
+   SysUtils, Classes, DB,
+   Cadastro.Model.Relatorios.Interfaces,
+   Cadastro.Model.Conexao.Interfaces,
+   FMX.frxClass, FMX.frxDBSet;
+
+type
+   TModelRelatorioPessoa = class(TInterfacedObject, IModelRelatorio)
+   private
+      { Private declarations }
+      fEngine: TfrxReport;
+      fQuery: IModelQuery;
+      fDataSet: TfrxDBDataset;
+      constructor Create;
+   protected
+      { Protected declarations }
+   public
+      { Public declarations }
+      destructor Destroy; override;
+      class function New: IModelRelatorio;
+      procedure Executa(const Previa: Boolean = True);
+   end;
+
+implementation
+
+uses
+   System.IOUtils,
+   Cadastro.Model.Entidades.Pessoa;
+
+{ TModelRelatorioPessoa }
+
+constructor TModelRelatorioPessoa.Create;
+begin
+   fEngine := TfrxReport.Create(Nil);
+   fEngine.DotMatrixReport := False;
+   fEngine.PreviewOptions.Buttons := fEngine.PreviewOptions.Buttons +
+                                     [pbPrint,
+                                      pbLoad,
+                                      pbSave,
+                                      pbExport,
+                                      pbZoom,
+                                      pbFullScreen,
+                                      pbOutline,
+                                      pbThumbnails,
+                                      pbPageSetup,
+                                      pbEdit,
+                                      pbNavigator,
+                                      pbClose];
+   fQuery := TModelConexaoFactory.New.Query;
+   fDataSet := TfrxDBDataset.Create(Nil);
+   fDataSet.Name := 'frdsPessoas';
+   fDataSet.UserName := fDataSet.Name;
+end;
+
+destructor TModelRelatorioPessoa.Destroy;
+begin
+   FreeAndNil(fEngine);
+   FreeAndNil(fDataSet);
+  inherited;
+end;
+
+procedure TModelRelatorioPessoa.Executa(const Previa: Boolean);
+var
+   AModel: IModelQuery;
+   ADataSet: TDataSource;
+   ASQL: String;
+begin
+   ASQL := '';
+   ASQL := ASQL + 'SELECT p.id_pessoa, p.cpf, p.rg, p.nome, p.mae_nome, ';
+   ASQL := ASQL + 'p.pai_nome, e.cep, e.endereco, e.numero, e.cidade, e.estado ';
+   ASQL := ASQL + 'FROM dbo.pessoas p';
+   ASQL := ASQL + '   INNER JOIN dbo.enderecos e';
+   ASQL := ASQL + '      ON p.id_pessoa = e.id_pessoa ';
+   ASQL := ASQL + 'ORDER BY p.nome';
+   fQuery.Open(ASQL);
+   with fQuery do
+      begin
+         if not Query.IsEmpty then
+            begin
+               if fEngine.LoadFromFile(TPath
+                                          .Combine(TPath
+                                                      .Combine(ExtractFilePath(ParamStr(0)),
+                                                               'Reports'),
+                                                   'Pessoas.fr3'),
+                                       True) then
+                  begin
+                     ADataSet := TDataSource.Create(Nil);
+                     try
+                        AModel := TModelEntidadePessoa.New;
+                        TModelEntidadePessoa(AModel).DataSet(ADataSet).Open();
+                        fDataSet.DataSet := ADataSet.DataSet;
+                        if Previa then
+                           fEngine.ShowReport()
+                        else
+                           fEngine.Print;
+                     finally
+                        FreeAndNil(ADataSet);
+                     end;
+                  end;
+            end;
+      end;
+end;
+
+class function TModelRelatorioPessoa.New: IModelRelatorio;
+begin
+   Result := Self.Create;
+end;
+
+end.

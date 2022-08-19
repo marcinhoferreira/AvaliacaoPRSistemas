@@ -1,0 +1,123 @@
+object ModelCadastro: TModelCadastro
+  OnDestroy = DataModuleDestroy
+  Height = 116
+  Width = 544
+  PixelsPerInch = 96
+  object conConexao: TFDConnection
+    Params.Strings = (
+      'Database=dados'
+      'User_Name=sa'
+      'Server=marcio-vaio\sqlexpress'
+      'Password=Le@l#123'
+      'DriverID=MSSQL')
+    ConnectedStoredUsage = []
+    Connected = True
+    LoginPrompt = False
+    Transaction = trTransacao
+    Left = 32
+    Top = 8
+  end
+  object FDPhysMSSQLDriverLink1: TFDPhysMSSQLDriverLink
+    Left = 160
+    Top = 56
+  end
+  object trTransacao: TFDTransaction
+    Connection = conConexao
+    Left = 32
+    Top = 56
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'FMX'
+    Left = 160
+    Top = 8
+  end
+  object qryPessoas: TFDQuery
+    Connection = conConexao
+    SQL.Strings = (
+      'SELECT id_pessoa, cpf, rg, nome, mae_nome, pai_nome'
+      'FROM dbo.pessoas'
+      'ORDER BY nome')
+    Left = 328
+    Top = 8
+    object qryPessoasid_pessoa: TFDAutoIncField
+      FieldName = 'id_pessoa'
+      Origin = 'id_pessoa'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object qryPessoascpf: TLargeintField
+      FieldName = 'cpf'
+      Origin = 'cpf'
+      Required = True
+    end
+    object qryPessoasrg: TLargeintField
+      FieldName = 'rg'
+      Origin = 'rg'
+      Required = True
+    end
+    object qryPessoasnome: TStringField
+      FieldName = 'nome'
+      Origin = 'nome'
+      Required = True
+      Size = 255
+    end
+    object qryPessoasmae_nome: TStringField
+      FieldName = 'mae_nome'
+      Origin = 'mae_nome'
+      Size = 255
+    end
+    object qryPessoaspai_nome: TStringField
+      FieldName = 'pai_nome'
+      Origin = 'pai_nome'
+      Size = 255
+    end
+  end
+  object qryEnderecos: TFDQuery
+    MasterSource = dsPessoas
+    Connection = conConexao
+    SQL.Strings = (
+      'SELECT id_pessoa, cep, endereco, numero, cidade, estado'
+      'FROM dbo.enderecos'
+      'ORDER BY cep')
+    Left = 440
+    Top = 8
+    object qryEnderecosid_pessoa: TIntegerField
+      FieldName = 'id_pessoa'
+      Origin = 'id_pessoa'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object qryEnderecoscep: TIntegerField
+      FieldName = 'cep'
+      Origin = 'cep'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object qryEnderecosendereco: TStringField
+      FieldName = 'endereco'
+      Origin = 'endereco'
+      Size = 255
+    end
+    object qryEnderecosnumero: TStringField
+      FieldName = 'numero'
+      Origin = 'numero'
+      Size = 10
+    end
+    object qryEnderecoscidade: TStringField
+      FieldName = 'cidade'
+      Origin = 'cidade'
+      Size = 50
+    end
+    object qryEnderecosestado: TStringField
+      FieldName = 'estado'
+      Origin = 'estado'
+      Size = 50
+    end
+  end
+  object dsPessoas: TDataSource
+    AutoEdit = False
+    DataSet = qryPessoas
+    Left = 328
+    Top = 56
+  end
+end

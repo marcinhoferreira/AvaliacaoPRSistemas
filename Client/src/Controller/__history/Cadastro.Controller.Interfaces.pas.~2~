@@ -1,0 +1,12 @@
+unit Cadastro.Controller.Interfaces;
+
+interface
+
+type
+   IPessoaController = Interface
+      ['{29E657EC-A8E2-4149-AE11-D13F36D3668A}']
+   End;
+
+implementation
+
+end.

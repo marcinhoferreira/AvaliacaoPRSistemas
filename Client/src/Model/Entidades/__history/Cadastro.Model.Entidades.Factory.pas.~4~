@@ -1,0 +1,114 @@
+unit Cadastro.Model.Entidades.Factory;
+
+interface
+
+uses
+  Cadastro.Model.Entidades.Interfaces;
+
+type
+   TModelEntidadesFactory = class(TInterfacedObject, IModelEntidadeFactory)
+   private
+      { Private declarations }
+      fPessoa: IModelEntidade;
+   public
+      { Public declarations }
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IModelEntidadeFactory;
+      function Pessoa: IModelEntidade;
+    end;
+
+implementation
+
+uses
+   Cadastro.Model.Entidades.Pessoa;
+
+{ TModelEntidadesFactory }
+
+destructor TModelEntidadesFactory.Destroy;
+begin
+
+   inherited;
+end;
+
+class function TModelEntidadesFactory.New: IModelEntidadeFactory;
+begin
+   Result := Self.Create;
+end;
+
+function TModelEntidadesFactory.Pais: IModelEntidade;
+begin
+   if not Assigned(fPais) then
+      fPais := TModelEntidadePais.New(fTipoConexao);
+   Result := fPais;
+end;
+
+function TModelEntidadesFactory.Pessoa: IModelEntidade;
+begin
+   if not Assigned(fPessoa) then
+      fPessoa := TModelEntidadePessoa.New(fTipoConexao);
+   Result := fPessoa;
+end;
+
+function TModelEntidadesFactory.PlanoDePagamento: IModelEntidade;
+begin
+   if not Assigned(fPlanoDePagamento) then
+      fPlanoDePagamento := TModelEntidadePlanoDePagamento.New(fTipoConexao);
+   Result := fPlanoDePagamento;
+end;
+
+function TModelEntidadesFactory.Regiao: IModelEntidade;
+begin
+   if not Assigned(fRegiao) then
+      fRegiao := TModelEntidadeRegiao.New(fTipoConexao);
+   Result := fRegiao;
+end;
+
+function TModelEntidadesFactory.Usuario: IModelEntidade;
+begin
+   if not Assigned(fUsuario) then
+      fUsuario := TModelEntidadeUsuario.New(fTipoConexao);
+   Result := fUsuario;
+end;
+
+function TModelEntidadesFactory.Zona: IModelEntidade;
+begin
+   if not Assigned(fZona) then
+      fZona := TModelEntidadeZona.New(fTipoConexao);
+   Result := fZona;
+end;
+
+function TModelEntidadesFactory.Aplicativo: IModelEntidade;
+begin
+   if not Assigned(fAplicativo) then
+      fAplicativo := TModelEntidadeAplicativo.New(fTipoConexao);
+   Result := fAplicativo;
+end;
+
+function TModelEntidadesFactory.Bairro: IModelEntidade;
+begin
+   if not Assigned(fBairro) then
+      fBairro := TModelEntidadeBairro.New(fTipoConexao);
+   Result := fBairro;
+end;
+
+function TModelEntidadesFactory.Cidade: IModelEntidade;
+begin
+   if not Assigned(fCidade) then
+      fCidade := TModelEntidadeCidade.New(fTipoConexao);
+   Result := fCidade;
+end;
+
+function TModelEntidadesFactory.Cliente: IModelEntidade;
+begin
+   if not Assigned(fCliente) then
+      fCliente := TModelEntidadeCliente.New(fTipoConexao);
+   Result := fCliente;
+end;
+
+constructor TModelEntidadesFactory.Create(const ATipoConexao: TTipoConexao = tcFireDAC);
+begin
+   fTipoConexao := ATipoConexao;
+end;
+
+end.

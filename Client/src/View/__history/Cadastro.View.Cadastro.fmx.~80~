@@ -1,0 +1,467 @@
+object frmCadastro: TfrmCadastro
+  Left = 0
+  Top = 0
+  Caption = 'Cadastro de Pessoas'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object lytAreaDeTrabalho: TLayout
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 440.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object lblNome: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 12.000000000000000000
+      Size.Width = 36.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'Nome:'
+      TabOrder = 12
+    end
+    object edtNome: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 19
+      Position.X = 8.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 617.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      CharCase = ecUpperCase
+    end
+    object edtCPF: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 18
+      FilterChar = '0123456789'
+      Position.X = 8.000000000000000000
+      Position.Y = 104.000000000000000000
+      Size.Width = 181.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblCPF: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 76.000000000000000000
+      Size.Width = 23.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'CPF:'
+      TabOrder = 3
+    end
+    object edtRG: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 15
+      FilterChar = '0123456789'
+      Position.X = 197.000000000000000000
+      Position.Y = 104.000000000000000000
+      Size.Width = 181.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object lblRG: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 197.000000000000000000
+      Position.Y = 76.000000000000000000
+      Size.Width = 18.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'RG:'
+      TabOrder = 0
+    end
+    object lblMaeNome: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 140.000000000000000000
+      Size.Width = 79.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'Nome da M'#227'e:'
+      TabOrder = 10
+    end
+    object edtMaeNome: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 17
+      Position.X = 8.000000000000000000
+      Position.Y = 168.000000000000000000
+      Size.Width = 617.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      CharCase = ecUpperCase
+    end
+    object lblPaiNome: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 204.000000000000000000
+      Size.Width = 72.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'Nome do Pai:'
+      TabOrder = 7
+    end
+    object edtPaiNome: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 13
+      Position.X = 8.000000000000000000
+      Position.Y = 232.000000000000000000
+      Size.Width = 617.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      CharCase = ecUpperCase
+    end
+    object lblCEP: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 268.000000000000000000
+      Size.Width = 23.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'CEP:'
+      TabOrder = 2
+    end
+    object edtCEP: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 16
+      FilterChar = '0123456789'
+      Position.X = 8.000000000000000000
+      Position.Y = 296.000000000000000000
+      Size.Width = 93.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      OnExit = edtCEPExit
+    end
+    object lblEndereco: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 109.000000000000000000
+      Position.Y = 268.000000000000000000
+      Size.Width = 52.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'Endere'#231'o:'
+      TabOrder = 6
+    end
+    object edtEndereco: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 11
+      Position.X = 109.000000000000000000
+      Position.Y = 296.000000000000000000
+      Size.Width = 371.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      CharCase = ecUpperCase
+    end
+    object lblNumero: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 488.000000000000000000
+      Position.Y = 268.000000000000000000
+      Size.Width = 47.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'N'#250'mero:'
+      TabOrder = 1
+    end
+    object edtNumero: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 14
+      Position.X = 488.000000000000000000
+      Position.Y = 296.000000000000000000
+      Size.Width = 137.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      CharCase = ecUpperCase
+    end
+    object lblCidade: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 332.000000000000000000
+      Size.Width = 40.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'Cidade:'
+      TabOrder = 5
+    end
+    object edtCidade: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 9
+      Position.X = 8.000000000000000000
+      Position.Y = 360.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      CharCase = ecUpperCase
+    end
+    object edtEstado: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      StyleLookup = 'editstyle'
+      TabOrder = 8
+      Position.X = 396.000000000000000000
+      Position.Y = 360.000000000000000000
+      Size.Width = 229.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      CharCase = ecUpperCase
+    end
+    object lblEstado: TLabel
+      AutoSize = True
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 396.000000000000000000
+      Position.Y = 332.000000000000000000
+      Size.Width = 39.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'labelstyle'
+      TextSettings.WordWrap = False
+      Text = 'Estado:'
+      TabOrder = 4
+    end
+    object lytNavegador: TLayout
+      Align = Bottom
+      Position.Y = 400.000000000000000000
+      Size.Width = 640.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 20
+      object btnPrimeiro: TSpeedButton
+        Align = Left
+        Margins.Left = 4.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 4.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Position.X = 4.000000000000000000
+        Position.Y = 4.000000000000000000
+        Size.Width = 32.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'buttonstyle'
+        Text = '|<'
+      end
+      object btnAnterior: TSpeedButton
+        Align = Left
+        Margins.Left = 4.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 4.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Position.X = 44.000000000000000000
+        Position.Y = 4.000000000000000000
+        Size.Width = 32.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'buttonstyle'
+        Text = '<'
+      end
+      object btnProximo: TSpeedButton
+        Align = Left
+        Margins.Left = 4.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 4.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Position.X = 84.000000000000000000
+        Position.Y = 4.000000000000000000
+        Size.Width = 32.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'buttonstyle'
+        Text = '>'
+        OnClick = btnProximoClick
+      end
+      object btnUltimo: TSpeedButton
+        Align = Left
+        Margins.Left = 4.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 4.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Position.X = 124.000000000000000000
+        Position.Y = 4.000000000000000000
+        Size.Width = 32.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'buttonstyle'
+        Text = '>|'
+      end
+    end
+  end
+  object lytBarraDeFerramentas: TLayout
+    Align = Top
+    Size.Width = 640.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 8
+    object btnImprimir: TSpeedButton
+      Align = Left
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 444.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'buttonstyle'
+      Text = 'Imprimir'
+      OnClick = btnImprimirClick
+    end
+    object btnIncluir: TSpeedButton
+      Align = Left
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 4.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'buttonstyle'
+      Text = 'Incluir'
+      OnClick = btnIncluirClick
+    end
+    object btnAlterar: TSpeedButton
+      Align = Left
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 92.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'buttonstyle'
+      Text = 'Alterar'
+      OnClick = btnAlterarClick
+    end
+    object btnExcluir: TSpeedButton
+      Align = Left
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 180.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'buttonstyle'
+      Text = 'Excluir'
+      OnClick = btnExcluirClick
+    end
+    object btnGravar: TSpeedButton
+      Align = Left
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 268.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'buttonstyle'
+      Text = 'Gravar'
+      OnClick = btnGravarClick
+    end
+    object btnCancelar: TSpeedButton
+      Align = Left
+      Margins.Left = 4.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 356.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'buttonstyle'
+      Text = 'Cancelar'
+      OnClick = btnCancelarClick
+    end
+  end
+  object ACBrCEP1: TACBrCEP
+    ProxyPort = '8080'
+    ParseText = True
+    WebService = wsBuscarCep
+    PesquisarIBGE = True
+    OnBuscaEfetuada = ACBrCEP1BuscaEfetuada
+    Left = 496
+    Top = 156
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'FMX'
+    Left = 496
+    Top = 112
+  end
+end
